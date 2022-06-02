@@ -58,29 +58,28 @@
 // fetch("https://pixabay.com/api/?key=27772870-4058b108341efce898c1dbbbe&q=cat&image_type=photo")
 //   .then(r => r.json())
 //   .then(console.log);
-
+import ApiService from "./js/api-service";
 const refs = {
   searchForm: document.querySelector(".search-form"),
   articlesContainer: document.querySelector(".gallery"),
-}
+  loadMoreBtn: document.querySelector(".load-more")
+};
+const newsApiService = new ApiService();
 
 refs.searchForm.addEventListener("submit", onSearch);
+refs.loadMoreBtn.addEventListener("click", onLoadMore);
+
+let searchQuery = " ";
 
 function onSearch(e) {
   e.preventDefault();
-  const searchQuery = e.currentTarget.elements.searchQuery.value;
+  searchQuery = e.currentTarget.elements.searchQuery.value;
   console.dir(searchQuery);
 
-//   const options = {
-//   headers: {
-//     Authorization: '27772870-4058b108341efce898c1dbbbe',
-//   },
-// };
-  // const url = 'https://pixabay.com/api';
-  
+/
+  newsApiService.fetchArticles(searchQuery);
+};
 
-  fetch(`https://pixabay.com/api/?key=27772870-4058b108341efce898c1dbbbe&q=${searchQuery}&image_type=photo&orientation=horizontal&safesearch=true`)
-    .then(r => r.json())
-  .then(console.log)
-
+function onLoadMore() {
+  newsApiService.fetchArticles(searchQuery);
 }
