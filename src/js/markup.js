@@ -1,15 +1,32 @@
 
-export { makeListMarkup };
+export { makeCardsMarkup };
 export { makeInfoMarkup };
     
 
 
 
-function makeListMarkup (data ) {
+function makeCardsMarkup (data ) {
   return data
     .map(
-      ({ name, flags }) =>
-        `<li><img src="${flags.svg}" alt="${name.official}" width="50" height="40">${name.official}</li>`,
+      ({ webformatURL, largeImageURL,tags,likes,views,comments,downloads }) =>
+        // `<li><img src="${flags.svg}" alt="${name.official}" width="50" height="40">${name.official}</li>`
+        `<div class="photo-card">
+  <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+  <div class="info">
+    <p class="info-item">
+      <b>Likes:${likes}</b>
+    </p>
+    <p class="info-item">
+      <b>Views:${views}</b>
+    </p>
+    <p class="info-item">
+      <b>Comments:${comments}</b>
+    </p>
+    <p class="info-item">
+      <b>Downloads:${downloads}</b>
+    </p>
+  </div>
+</div>`,
     )
     .join('');
 };

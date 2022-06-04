@@ -1,6 +1,6 @@
 // import './css/styles.css';
 // import { fetchCountries } from './js/fetchCountries';
-// import { makeListMarkup } from './js/markup';
+import { makeCardsMarkup } from './js/markup';
 // import { makeInfoMarkup } from './js/markup';
 // import debounce from 'lodash.debounce';
 // import { Notify } from 'notiflix/build/notiflix-notify-aio';
@@ -61,25 +61,30 @@
 import ApiService from "./js/api-service";
 const refs = {
   searchForm: document.querySelector(".search-form"),
-  articlesContainer: document.querySelector(".gallery"),
+  cardsContainer: document.querySelector(".gallery"),
   loadMoreBtn: document.querySelector(".load-more")
 };
 const newsApiService = new ApiService();
+console.log(newsApiService);
 
 refs.searchForm.addEventListener("submit", onSearch);
 refs.loadMoreBtn.addEventListener("click", onLoadMore);
 
-let searchQuery = " ";
+
 
 function onSearch(e) {
   e.preventDefault();
-  searchQuery = e.currentTarget.elements.searchQuery.value;
-  console.dir(searchQuery);
 
-/
-  newsApiService.fetchArticles(searchQuery);
+  newsApiService.query = e.currentTarget.elements.searchQuery.value;
+  newsApiService.resetPage();
+  console.dir(newsApiService.query);
+  newsApiService.fetchArticles().then(appendCardsMarkup);
 };
 
 function onLoadMore() {
-  newsApiService.fetchArticles(searchQuery);
+  newsApiService.fetchArticles().then(appendCardsMarkup);
+};
+
+function appendCardsMarkup(hits) {
+  refs.cardsContainer.insertAdjacentHTML('beforeend', makeCardsMarkup(hits));
 }
