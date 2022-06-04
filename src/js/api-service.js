@@ -1,17 +1,19 @@
+const BASE_URL = 'https://pixabay.com/api/';
+
 export default class ApiService{
   constructor() { 
-    this.searchQuery = "";
+    this.searchQuery = '';
     this.page = 1;
-    }
-  fetchArticles(searchQuery) {
+  }
+  fetchArticles() {
     console.log("до", this);
-    return fetch(`https://pixabay.com/api/?key=27772870-4058b108341efce898c1dbbbe&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=40`)
-      .then(r => r.json())
-      .then(data => {
+    return fetch(`${BASE_URL}?key=27772870-4058b108341efce898c1dbbbe&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=40`)
+      .then(response => response.json())
+      .then(({hits}) => {
         this.page += 1;
-       console.log(data);
+       console.log(hits);
         console.log("after", this);
-        return data.hits;
+        return hits;
       });
   }
   resetPage(){
