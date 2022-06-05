@@ -55,7 +55,8 @@ async function fetchHits() {
       }
       
   if (newsApiService.page === 2) {
-            Notify.info(`Ура! Ми знайшли для Вас ${res.totalHits} зображень.`);
+    Notify.info(`Ура! Ми знайшли для Вас ${res.totalHits} зображень.`);
+    searchForm.showForm();
     };
 
      appendCardsMarkup(res.hits);
