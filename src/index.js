@@ -32,7 +32,7 @@ loadMoreBtn.refs.button.addEventListener("click", fetchHits);
 
 function onSearch(e) {
   e.preventDefault();
-    newsApiService.query = e.currentTarget.elements.searchQuery.value;
+    newsApiService.query = e.currentTarget.elements.searchQuery.value.trim();
   if (newsApiService.query === '') {
     return Notify.failure(`Рядок пошуку не може бути порожнім. Будь ласка, вкажіть свій пошуковий запит`);
   }
