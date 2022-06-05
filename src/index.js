@@ -9,24 +9,23 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const lightbox = new SimpleLightbox('.gallery a');
 
-const refs = {
-  // searchForm: document.querySelector(".search-form"),
+const refs = {  
   cardsContainer: document.querySelector(".gallery"),
-  // loadMoreBtn: document.querySelector(".load-more")
-};
+  };
+
  const searchForm = new LoadMoreBtn({
    selector: '.search-form',
-    });
-searchForm.showForm();
-
+ });
+    
  const loadMoreBtn = new LoadMoreBtn({
    selector: '[data-action="load-more"]',
    hidden: true,
  });
+
 const newsApiService = new ApiService();
-// console.log(newsApiService);
-// console.log(loadMoreBtn);
-// console.log(searchForm);
+
+searchForm.showForm();
+
 searchForm.refs.button.addEventListener("submit", onSearch);
 loadMoreBtn.refs.button.addEventListener("click", fetchHits);
 
@@ -35,53 +34,55 @@ function onSearch(e) {
   e.preventDefault();
     newsApiService.query = e.currentTarget.elements.searchQuery.value;
   if (newsApiService.query === '') {
-    return Notify.failure(`The search string cannot be empty. Please specify your search query`);
+    return Notify.failure(`Рядок пошуку не може бути порожнім. Будь ласка, вкажіть свій пошуковий запит`);
   }
-  
+
   loadMoreBtn.show();
   newsApiService.resetPage();
   clearCardsContainer();
-  console.dir(newsApiService.query);
   searchForm.hideForm();
   fetchHits();
-  
-};
+  };
 
-// function onLoadMore() {
-//   fetchHits();
-// };
-
-function fetchHits() {
+async function fetchHits() {
   loadMoreBtn.disable();
-  newsApiService.fetchArticles().then(data => {
-    console.log(data.hits, data.totalHits)
-    if (data.hits. length === 0) {
-            Notify.failure(`Sorry, there are no images matching your search query: ${newsApiService.query}. Please try again.`);
+  try {const res = await newsApiService.fetchArticles()
+      
+  if (res.hits. length === 0) {
+            Notify.failure(`На жаль, немає зображень, що відповідають вашому запиту: ${newsApiService.query}. Будь ласка спробуйте ще раз.`);
             loadMoreBtn.hide();searchForm.showForm();
             return;
-        }
+      }
       
-    if (newsApiService.page === 2) {
-      console.log("поточна сторынка",newsApiService.page);
-       Notify.info(`Hooray! We found ${data.totalHits} images.`);
+  if (newsApiService.page === 2) {
+            Notify.info(`Ура! Ми знайшли для Вас ${res.totalHits} зображень.`);
     };
-    appendCardsMarkup(data.hits);
+
+     appendCardsMarkup(res.hits);
      lightbox.refresh();
-    if (newsApiService.page > Math.round(data.totalHits / data.hits.length)) {
-      console.log(Math.round(data.totalHits / data.hits.length))
-      Notify.failure(`We're sorry, but you've reached the end of search results.`);
-      loadMoreBtn.hide();
-    return;
+    
+    if (newsApiService.page > Math.ceil(res.totalHits / res.hits.length)) {
+            console.log(Math.round(res.totalHits / res.hits.length))
+            Notify.failure(`Вибачте, Ви досягли межі доступних зображень для безкоштовного акаунту....`);
+            loadMoreBtn.hide();
+            return;
     };
+    
     loadMoreBtn.enable();
     searchForm.showForm();
-  });
+    
+  } catch (error) {
+    console.log(error);
+  };
+   
 }
+
 
 function appendCardsMarkup(hits) {
   refs.cardsContainer.insertAdjacentHTML('beforeend', makeCardsMarkup(hits));
 };
 function clearCardsContainer() {
   refs.cardsContainer.innerHTML = '';
-}
+};
+
 

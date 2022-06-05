@@ -1,16 +1,12 @@
 
 export { makeCardsMarkup };
-
-    
-
-
+  
 
 function makeCardsMarkup (data ) {
   return data
     .map(
       ({ webformatURL, largeImageURL,tags,likes,views,comments,downloads }) =>
-        // `<li><img src="${flags.svg}" alt="${name.official}" width="50" height="40">${name.official}</li>`
-        `<div class="photo-card">
+              `<div class="photo-card">
     <a class="gallery-item" href="${largeImageURL}"><img class="gallery-image" src="${webformatURL}" alt="${tags}" loading="lazy"/></a>
     <div class="info">
     <p class="info-item">
